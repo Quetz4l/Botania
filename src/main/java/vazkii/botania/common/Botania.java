@@ -17,7 +17,6 @@ import vazkii.botania.common.integration.coloredlights.ILightHelper;
 import vazkii.botania.common.integration.coloredlights.LightHelperColored;
 import vazkii.botania.common.integration.coloredlights.LightHelperVanilla;
 import vazkii.botania.common.integration.waila.BotaniaWailaPlugin;
-import vazkii.botania.common.integration.waila.BotaniaWailaProvider;
 import vazkii.botania.common.lib.LibMisc;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;

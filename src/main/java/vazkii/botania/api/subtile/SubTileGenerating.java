@@ -14,27 +14,32 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
+import mcp.mobius.waila.api.IWailaConfigHandler;
+import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import vazkii.botania.api.BotaniaAPI;
 import vazkii.botania.api.internal.IManaNetwork;
 import vazkii.botania.api.mana.IManaCollector;
+import vazkii.botania.common.integration.waila.IBotaiaWailaProvider;
 
 /**
  * The basic class for a Generating Flower.
  */
-public class SubTileGenerating extends SubTileEntity {
+public class SubTileGenerating extends SubTileEntity implements IBotaiaWailaProvider {
 
 	public static final int RANGE = 6;
 
@@ -310,6 +315,24 @@ public class SubTileGenerating extends SubTileEntity {
 	@Override
 	public boolean isOvergrowthAffected() {
 		return !isPassiveFlower();
+	}
+
+	@Override
+	public void getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor,
+							 IWailaConfigHandler config) {
+		final NBTTagCompound tag = accessor.getNBTData();
+		currenttip.add(StatCollector.translateToLocal("botaniamisc.mana") + ": "
+				+ EnumChatFormatting.BOLD
+				+ EnumChatFormatting.AQUA
+				+ tag.getInteger("mana"));
+
+	}
+
+	@Override
+	public void getWailaNBTData(final EntityPlayerMP player, final TileEntity tile, final NBTTagCompound tag,
+								final World world, int x, int y, int z) {
+		tag.setInteger("mana", this.mana);
+
 	}
 
 }

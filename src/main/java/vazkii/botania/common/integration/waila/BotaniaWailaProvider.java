@@ -8,6 +8,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import vazkii.botania.api.subtile.SubTileEntity;
+import vazkii.botania.common.block.tile.TileSpecialFlower;
 
 import java.util.List;
 
@@ -30,6 +32,12 @@ public class BotaniaWailaProvider implements IWailaDataProvider {
         final TileEntity tile = accessor.getTileEntity();
         if (tile instanceof IBotaiaWailaProvider) {
             ((IBotaiaWailaProvider) tile).getWailaBody(itemStack, currenttip, accessor, config);
+        } else if (tile instanceof TileSpecialFlower) {
+            TileSpecialFlower tileSpecial = (TileSpecialFlower) tile;
+            SubTileEntity subTile = tileSpecial.getSubTile();
+            if (subTile instanceof IBotaiaWailaProvider){
+                ((IBotaiaWailaProvider) subTile).getWailaBody(itemStack, currenttip, accessor, config);
+            }
         }
 
         return currenttip;
@@ -46,6 +54,12 @@ public class BotaniaWailaProvider implements IWailaDataProvider {
                                      int y, int z) {
         if (tile instanceof IBotaiaWailaProvider) {
             ((IBotaiaWailaProvider) tile).getWailaNBTData(player, tile, tag, world, x, y, z);
+        } else if (tile instanceof TileSpecialFlower) {
+            TileSpecialFlower tileSpecial = (TileSpecialFlower) tile;
+            SubTileEntity subTile = tileSpecial.getSubTile();
+            if (subTile instanceof IBotaiaWailaProvider){
+                ((IBotaiaWailaProvider) subTile).getWailaNBTData(player, tile, tag, world, x, y, z);
+            }
         }
 
         return tag;
