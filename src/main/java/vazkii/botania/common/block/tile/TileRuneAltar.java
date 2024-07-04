@@ -13,18 +13,24 @@ package vazkii.botania.common.block.tile;
 import java.util.ArrayList;
 import java.util.List;
 
+import mcp.mobius.waila.api.IWailaConfigHandler;
+import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
 
+import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
@@ -37,10 +43,11 @@ import vazkii.botania.client.core.helper.RenderHelper;
 import vazkii.botania.common.Botania;
 import vazkii.botania.common.block.ModBlocks;
 import vazkii.botania.common.core.helper.Vector3;
+import vazkii.botania.common.integration.waila.IBotaiaWailaProvider;
 import vazkii.botania.common.item.ModItems;
 import vazkii.botania.common.lib.LibBlockNames;
 
-public class TileRuneAltar extends TileSimpleInventory implements ISidedInventory, IManaReceiver {
+public class TileRuneAltar extends TileSimpleInventory implements ISidedInventory, IManaReceiver, IBotaiaWailaProvider {
 
 	private static final String TAG_MANA = "mana";
 	private static final String TAG_MANA_TO_GET = "manaToGet";
@@ -414,6 +421,24 @@ public class TileRuneAltar extends TileSimpleInventory implements ISidedInventor
 
 	public int getTargetMana() {
 		return manaToGet;
+	}
+
+	@Override
+	public void getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor,
+							 IWailaConfigHandler config) {
+		final NBTTagCompound tag = accessor.getNBTData();
+		currenttip.add(StatCollector.translateToLocal("botaniamisc.mana") + ": "
+				+ EnumChatFormatting.BOLD
+				+ EnumChatFormatting.AQUA
+				+ tag.getInteger("mana"));
+
+	}
+
+	@Override
+	public void getWailaNBTData(final EntityPlayerMP player, final TileEntity tile, final NBTTagCompound tag,
+								final World world, int x, int y, int z) {
+		tag.setInteger("mana", this.getCurrentMana());
+
 	}
 
 }

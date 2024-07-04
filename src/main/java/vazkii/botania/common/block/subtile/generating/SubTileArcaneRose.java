@@ -12,15 +12,25 @@ package vazkii.botania.common.block.subtile.generating;
 
 import java.util.List;
 
+import mcp.mobius.waila.api.IWailaConfigHandler;
+import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.StatCollector;
+import net.minecraft.world.World;
 import vazkii.botania.api.lexicon.LexiconEntry;
 import vazkii.botania.api.subtile.RadiusDescriptor;
 import vazkii.botania.api.subtile.SubTileGenerating;
 import vazkii.botania.common.core.helper.ExperienceHelper;
+import vazkii.botania.common.integration.waila.IBotaiaWailaProvider;
 import vazkii.botania.common.lexicon.LexiconData;
 
-public class SubTileArcaneRose extends SubTileGenerating {
+public class SubTileArcaneRose extends SubTileGenerating implements IBotaiaWailaProvider {
 
 	private static final int RANGE = 1;
 
@@ -58,6 +68,24 @@ public class SubTileArcaneRose extends SubTileGenerating {
 	@Override
 	public LexiconEntry getEntry() {
 		return LexiconData.arcaneRose;
+	}
+
+	@Override
+	public void getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor,
+							 IWailaConfigHandler config) {
+		final NBTTagCompound tag = accessor.getNBTData();
+		currenttip.add(StatCollector.translateToLocal("botaniamisc.mana") + ": "
+				+ EnumChatFormatting.BOLD
+				+ EnumChatFormatting.AQUA
+				+ tag.getInteger("mana"));
+
+	}
+
+	@Override
+	public void getWailaNBTData(final EntityPlayerMP player, final TileEntity tile, final NBTTagCompound tag,
+								final World world, int x, int y, int z) {
+		tag.setInteger("mana", this.mana);
+
 	}
 
 }

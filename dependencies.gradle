@@ -1,6 +1,8 @@
 // Add your dependencies here
 
 dependencies {
+    api("com.github.GTNewHorizons:waila:1.7.3:dev")
+
     compile('com.github.GTNewHorizons:Baubles:1.0.4:dev')
 
     compile('thaumcraft:Thaumcraft:1.7.10-4.2.3.5:dev')

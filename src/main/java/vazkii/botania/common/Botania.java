@@ -16,6 +16,8 @@ import vazkii.botania.common.core.proxy.CommonProxy;
 import vazkii.botania.common.integration.coloredlights.ILightHelper;
 import vazkii.botania.common.integration.coloredlights.LightHelperColored;
 import vazkii.botania.common.integration.coloredlights.LightHelperVanilla;
+import vazkii.botania.common.integration.waila.BotaniaWailaPlugin;
+import vazkii.botania.common.integration.waila.BotaniaWailaProvider;
 import vazkii.botania.common.lib.LibMisc;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
@@ -42,6 +44,7 @@ public class Botania {
 	public static boolean coloredLightsLoaded = false;
 	public static boolean etFuturumLoaded = false;
 	public static boolean storageDrawersLoaded = false;
+	public static boolean waila = false;
 
 	public static ILightHelper lightHelper;
 
@@ -61,6 +64,7 @@ public class Botania {
 		coloredLightsLoaded = Loader.isModLoaded("easycoloredlights");
 		etFuturumLoaded = Loader.isModLoaded("etfuturum");
 		storageDrawersLoaded = Loader.isModLoaded("StorageDrawers");
+		waila = Loader.isModLoaded("Waila");
 		
 		lightHelper = coloredLightsLoaded ? new LightHelperColored() : new LightHelperVanilla();
 		proxy.preInit(event);
@@ -99,4 +103,8 @@ public class Botania {
 	public void missingMappings(FMLMissingMappingsEvent event) {
 		AliasHandler.onMissingMappings(event);
 	}*/
+	@EventHandler
+	public void load(FMLInitializationEvent event) {
+		BotaniaWailaPlugin.init();
+	}
 }

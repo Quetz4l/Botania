@@ -13,6 +13,8 @@ package vazkii.botania.common.block.tile.mana;
 import java.util.List;
 import java.util.UUID;
 
+import mcp.mobius.waila.api.IWailaConfigHandler;
+import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.RenderHelper;
@@ -26,6 +28,7 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChunkCoordinates;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.StatCollector;
@@ -59,9 +62,10 @@ import vazkii.botania.common.core.handler.ManaNetworkHandler;
 import vazkii.botania.common.core.helper.Vector3;
 import vazkii.botania.common.entity.EntityManaBurst;
 import vazkii.botania.common.entity.EntityManaBurst.PositionProperties;
+import vazkii.botania.common.integration.waila.IBotaiaWailaProvider;
 import vazkii.botania.common.lib.LibBlockNames;
 
-public class TileSpreader extends TileSimpleInventory implements IManaCollector, IWandBindable, IKeyLocked, IThrottledPacket, IManaSpreader, IRedirectable {
+public class TileSpreader extends TileSimpleInventory implements IManaCollector, IWandBindable, IKeyLocked, IThrottledPacket, IManaSpreader, IRedirectable, IBotaiaWailaProvider {
 
 	private static final int MAX_MANA = 1000;
 	private static final int ULTRA_MAX_MANA = 6400;
@@ -760,6 +764,26 @@ public class TileSpreader extends TileSimpleInventory implements IManaCollector,
 
 	public UUID getIdentifierUnsafe() {
 		return identity;
+	}
+
+	@Override
+	public void getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor,
+							 IWailaConfigHandler config) {
+		final NBTTagCompound manaData = accessor.getNBTData().getCompoundTag("manaData");
+		currenttip.add(StatCollector.translateToLocal("botaniamisc.mana") + ": "
+				+ EnumChatFormatting.BOLD
+				+ EnumChatFormatting.AQUA
+				+ manaData.getInteger("mana"));
+
+	}
+
+	@Override
+	public void getWailaNBTData(final EntityPlayerMP player, final TileEntity tile, final NBTTagCompound tag,
+								final World world, int x, int y, int z) {
+		NBTTagCompound manaData = new NBTTagCompound();
+		manaData.setInteger("mana", this.getCurrentMana());
+		tag.setTag("manaData", manaData);
+
 	}
 
 }
